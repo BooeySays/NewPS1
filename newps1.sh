@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export THEME_CLR='\033[38;5;21m'
+export THEME_CLR='\033[38;5;11m'
 
 function __exitcode(){
 	CLR_THEME=$THEME_CLR
@@ -20,7 +20,7 @@ function __new_ps1(){
 	exitcodeps=$?
 #	ps1_exit
 	if [ -d ./.git ]; then
-		echo -en "$CLR_THEME┏\033[m📂\033[38;5;15m: \033[38;5;11m$(dirs)\033[38;5;39mⁱ\033[m\n$CLR_THEME┗┫\033[m"
+		echo -en "$CLR_THEME┏\033[m📂\033[38;5;15m: \033[38;5;11m$(dirs)\033[38;5;39mⁱ\033[m "; tput cuf 2; echo -en "$(__git_ps1)"; echo -en "\n$CLR_THEME┗┫\033[m"
 		unset exitcodeps
 	else
 		echo -en "$CLR_THEME┏\033[m📂\033[38;5;15m: \033[38;5;11m$(dirs)\033[m\n$CLR_THEME┗┫\033[m"
@@ -29,6 +29,7 @@ function __new_ps1(){
 	fi
 }
 function newpswithexit(){
-	__new_ps1;
-	__exitcode;
+	echo
+	__new_ps1
+	__exitcode
 }

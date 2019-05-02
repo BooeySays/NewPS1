@@ -4,6 +4,12 @@
 . ~/git-prompt.sh
 
 export PS_THEME='\033[01;31m'
+DATE_HOUR=$(date +%-I)
+DATE_MIN=$(date +%M)
+DATE_SEC=$(date +%S)
+
+TIME_NOCOLOR=`echo -en $(date +%-I:%M:%S %p)`
+TIME_CLR=`echo -en "\033[38;5;15m"$(date +%-I)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%M)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%S)" \033[m"$(__check_AMPM)"\033[m $PS_THEME┛\033[m\r"`
 
 function __chk_uid(){
 	if [ $UID -ne 0 ]; then
@@ -47,7 +53,9 @@ DIRBAR=$(tput cuf 2; echo -en " \033[01;33mDIR\033[37m: \033[33m$(dirs)\033[m ")
 TIME=$(tput cuf $[$[$COLUMNS-$(echo $(date) | wc -L)]-2]; echo -en $(date))
 
 function pcom(){
-	printf "\n$PS_THEME┏"; printf '━%.s' $(seq 2 $COLUMNS);echo -en "\r" 
+	printf "\n$PS_THEME┏"; printf '━%.s' $(seq 3 $COLUMNS);echo -en "┓\r" 
+#	printf "\n$PS_THEME┏"; printf '━%.s' $(seq 3 $COLUMNS);echo -e "┓"
+#	__time1 
 	# echo -e "\r${DIRBAR}\r$TIME"
 #	echo -e "\n"
 	#echo -en "$PS_THEME┗"
@@ -72,13 +80,54 @@ function newpcom(){
 #	echo -en $TIME
 	tput cuf $[$[$COLUMNS-$(echo " $(date) " | wc -L)]-2]; echo -en " $(date) \r"
 	echo -en "\n"
+	__time1
+}
+
+function __time1(){
+	TIMECUF=$[$COLUMNS-$(echo -en $(date +"%-I:%M:%S %p ┛") | wc -L)]
+	if [ `echo $(date +%p)` == 'PM' ]; then
+		tput cuf "$TIMECUF"; echo -en "$TIME_CLR"
+#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(__check_AMPM)\033[m $PS_THEME┛\033[m\r"
+#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(date +%p)\033[m\r"
+	else
+		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m$(__check_AMPM)\033[m $PS_THEME┛\033[m\r"
+#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m$(date +%p)\033[m\r"
+#\033[m$PS_THEME┛\033[m"
+	fi
 }
 
 
-__setps1
+#__setps1
 #┛
 #┣
 #┫
 #┳
 #┻
 #╋
+
+
+
+
+
+
+#TIME_PM=$(echo -en "[01;38;5;15m$DATE_HOUR:$DATE_MIN:$DATE_SEC [38;5;39mPM[m")
+#TIME_AM=$(echo -en "[01;38;5;15m$DATE_HOUR[m[01;38;5;15m:[m[38;5;15m$DATE_MIN[m[01;38;5;15m:[m[38;5;15m$DATE_SEC [38;5;226mAM[m")━
+#┃
+#┏
+#┓
+#┗
+#┛
+#┣
+#┫
+#┳
+#┻
+#╋
+#┓#!/bin/bash
+
+function __check_AMPM(){
+	if [ `echo $(date +%p)` == 'PM' ]; then
+		echo -en "\033[m\033[38;5;39m"$(date +%p)"\033[m"
+	else
+		echo -en "\033[m\033[38;5;226m"$(date +%p)"\033[m"
+	fi
+}

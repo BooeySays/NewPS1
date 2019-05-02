@@ -1,0 +1,8 @@
+#!/bin/bash
+
+DATE_HOUR=$(date +%-I)
+DATE_MIN=$(date +%M)
+DATE_SEC=$(date +%S)
+
+TIME_PM=$(echo -en "[01;38;5;15m$DATE_HOUR:$DATE_MIN:$DATE_SEC [38;5;39mPM[m")
+TIME_AM=$(echo -en "[01;38;5;15m$DATE_HOUR[m[01;38;5;15m:[m[38;5;15m$DATE_MIN[m[01;38;5;15m:[m[38;5;15m$DATE_SEC [38;5;226mAM[m")

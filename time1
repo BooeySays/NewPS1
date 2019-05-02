@@ -1,0 +1,12 @@
+
+
+
+
+function __time1(){
+	TIMECUF=$[$COLUMNS-$(echo -en $(date +"%-I:%M:%S %p ") | wc -L)]
+	if [ `echo $(date +%p)` == 'PM' ]; then
+		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(date +%p)\033[m\r"
+	else
+		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m$(date +%p)\033[m\r"
+	fi
+}

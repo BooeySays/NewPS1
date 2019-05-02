@@ -26,10 +26,17 @@ function __gitdir(){
 }
 
 function cd(){
-	DIR_TO_CD=$1
-	builtin cd "$DIR_TO_CD"
-	\ls -Fa --color=always --group-directories-first
-	unset DIR_TO_CD
+	if [ $1 == 'op' ]; then
+		DIR_TO_CD=$OLDPWD
+		builtin cd "$DIR_TO_CD"
+		\ls -Fa --color=always --group-directories-first
+		unset DIR_TO_CD
+	else
+		DIR_TO_CD=$1
+		builtin cd "$DIR_TO_CD"
+		\ls -Fa --color=always --group-directories-first
+		unset DIR_TO_CD
+	fi
 }
 #
 #┃

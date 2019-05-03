@@ -9,13 +9,67 @@ DATE_MIN=$(date +%M)
 DATE_SEC=$(date +%S)
 
 TIME_NOCOLOR=`echo -en $(date +%-I:%M:%S %p)`
-TIME_CLR=`echo -en "\033[38;5;15m"$(date +%-I)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%M)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%S)" \033[m"$(__check_AMPM)"\033[m $PS_THEME┛\033[m\r"`
+TIME_CLR=`echo -en "\033[38;5;15m\033[38;5;15m"$(date +%-I)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%M)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%S)" \033[m"$(__check_AMPM)"\033[m $PS_THEME┛\033[m\r"`
+
+function __ext_exit_code(){
+	RETVAL=$?
+	if [ $RETVAL != 0 ]; then
+		case $RETVAL in
+#	0)
+#		EMSG='All Good'
+#		tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;15m\033[38;5;11m*\033[38;5;15m[\033[38;5;10m"$RETVAL"\033[38;5;15m] - \033[38;5;10m"$EMSG"\033[m\n"
+#		unset EMSG
+#		;;
+#\033[38;5;15m
+		1)
+			EMSG='General error'
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			unset EMSG
+			;;
+		2)
+			EMSG='Misuse of shell builtins (according to BASH documentations)'
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			unset EMSG
+			;;
+		126)
+			EMSG='Command invoked cannot execute'
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			unset EMSG
+			;;
+		128)
+			EMSG='Command not found'
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;15m$(echo "EXIT CODE" | toilet -f wideterm) \033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			unset EMSG
+			;;
+		127)
+			EMSG='Invalid argument to exit'
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m* \033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m"
+			unset EMSG
+			;;
+		128?*)
+			EMSG='Fatal error signal "n"'
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			unset EMSG
+			;;
+		130)
+			EMSG='Script Terminated by [CTRL]+[C]'
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			unset EMSG
+			;;
+		255)
+			EMSG='Exit status out of range'
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			unset EMSG
+			;;
+		esac
+	fi
+}
 
 function __chk_uid(){
 	if [ $UID -ne 0 ]; then
 		echo -en "\033[01;32m$\033[m"
 	else
-		echo -en "\033[01;31m#\033[m"
+		echo -en "\033[38;5;15m\033[01;31m#\033[m"
 	fi
 }
 
@@ -47,10 +101,10 @@ function __exitcode(){
 	RETVAL=$?
 	case $RETVAL in
 	0)
-		echo -en "\033[01;37m[\033[01;32m0\033[01;37m]\033[m$PS_THEME━\033[m"
+		echo -en "\033[38;5;15m\033[01;37m[\033[01;32m0\033[01;37m]\033[m$PS_THEME━\033[m"
 		;;
 	*)
-		echo -en "\033[01;37m[\033[01;31m$RETVAL\033[01;37m]\033[m$PS_THEME━\033[m"
+		echo -en "\033[38;5;15m\033[01;37m[\033[01;31m$RETVAL\033[01;37m]\033[38;5;11m* \033[m$PS_THEME━\033[m"
 		;;
 	esac
 }
@@ -81,11 +135,12 @@ function __setps1(){
 }
 
 function newpcom(){
-	echo
+#	echo
+#	__ext_exit_code
 	pcom
 	tput cuf 2; echo -en " \033[m📂\033[01;37m: \033[m\033[38;5;11m$(dirs)\033[m$(__git_ps1) \r"
 #	echo -en $TIME
-	tput cuf $[$[$COLUMNS-$(echo " $(date) " | wc -L)]-2]; echo -en " $(date) \r"
+	tput cuf $[$[$COLUMNS-$(echo " $(date +%D) " | wc -L)]-2]; echo -en " $(date +%D) \r"
 	echo -en "\n"
 	__time1
 }
@@ -94,11 +149,11 @@ function __time1(){
 	TIMECUF=$[$COLUMNS-$(echo -en $(date +"%-I:%M:%S %p ┛") | wc -L)]
 	if [ `echo $(date +%p)` == 'PM' ]; then
 		tput cuf "$TIMECUF"; echo -en "$TIME_CLR"
-#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(__check_AMPM)\033[m $PS_THEME┛\033[m\r"
-#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(date +%p)\033[m\r"
+#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(__check_AMPM)\033[m $PS_THEME┛\033[m\r"
+#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(date +%p)\033[m\r"
 	else
-		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m$(__check_AMPM)\033[m $PS_THEME┛\033[m\r"
-#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m$(date +%p)\033[m\r"
+		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m"$(__check_AMPM)"\033[m $PS_THEME┛\033[m\r"
+#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m$(date +%p)\033[m\r"
 #\033[m$PS_THEME┛\033[m"
 	fi
 }
@@ -133,8 +188,8 @@ function __time1(){
 
 function __check_AMPM(){
 	if [ `echo $(date +%p)` == 'PM' ]; then
-		echo -en "\033[m\033[38;5;39m"$(date +%p)"\033[m"
+		echo -en "\033[38;5;15m\033[m\033[38;5;39m"$(date +%p)"\033[m"
 	else
-		echo -en "\033[m\033[38;5;226m"$(date +%p)"\033[m"
+		echo -en "\033[38;5;15m\033[m\033[38;5;226m"$(date +%p)"\033[m"
 	fi
 }

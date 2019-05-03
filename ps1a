@@ -38,7 +38,7 @@ function __ext_exit_code(){
 			;;
 		128)
 			EMSG='Command not found'
-			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;15m$(echo "EXIT CODE" | toilet -f wideterm) \033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
 			unset EMSG
 			;;
 		127)
@@ -53,7 +53,7 @@ function __ext_exit_code(){
 			;;
 		130)
 			EMSG='Script Terminated by [CTRL]+[C]'
-			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9m"$EMSG"\033[m\n"
+			tput cuf $[$[$COLUMNS - $(echo -en "*["$RETVAL"] - "$EMSG"" | wc -L)]/2]; echo -en "\033[38;5;11m*\033[38;5;15m[\033[38;5;9m"$RETVAL"\033[38;5;15m] - \033[38;5;9mScript Terminated by \033[38;5;15m[\033[38;5;9mCTRL\033[38;5;15m]\033[38;5;9m+\033[38;5;15m[\033[38;5;9mC\033[38;5;15m]\033[m\n"
 			unset EMSG
 			;;
 		255)

@@ -122,16 +122,18 @@ function pcom(){
 	#echo -en "$PS_THEME┗"
 }
 
-#export PROMPT_COMMAND='pcom'
+#export PROMPT_COMMAND='pcom'"$PS1_THEME"
 function __setps1(){
+	export PS1_THEME='\033[38;5;9m'
 	if [ ! $ps1 ]; then
 		ps1=$PS1
 	fi
 	if [ $PROMPT_COMMAND ]; then
 		prompt_command=$PROMPT_COMMAND
 	fi
-	export PROMPT_COMMAND='newpcom'
-	export PS1="$PS_THEME┗\`__exitcode\` \`__chk_uid\`\033[01;37m: \033[m"
+	export PROMPT_COMMAND='__git_ps1 ""$(printf ""$PS1_THEME"┏"; printf '━%.s' $(seq 3 $COLUMNS); printf "┓\033[m")"\r\033[2C \033[m📂\033[01;37m: \033[m\033[38;5;11m$(dirs) \033[m\033[1C" " \n"$PS1_THEME"┗\033[m\\\$ "'
+	
+	#export PS1="$PS_THEME┗\`__exitcode\` \`__chk_uid\`\033[01;37m: \033[m"
 }
 
 function newpcom(){
@@ -173,7 +175,7 @@ function __time1(){
 
 
 #TIME_PM=$(echo -en "[01;38;5;15m$DATE_HOUR:$DATE_MIN:$DATE_SEC [38;5;39mPM[m")
-#TIME_AM=$(echo -en "[01;38;5;15m$DATE_HOUR[m[01;38;5;15m:[m[38;5;15m$DATE_MIN[m[01;38;5;15m:[m[38;5;15m$DATE_SEC [38;5;226mAM[m")━
+#TIME_AM=$(echo -en "[01;38;5;15m$DATE_HOUR[m[01;38;5;15m:[m[38;5;15m$DATE_MIN[m[01;38;5;15m:[m[38;5;15m$DATE_SEC [38;5;226mAM[m")
 #┃
 #┏
 #┓

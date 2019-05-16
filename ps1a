@@ -83,21 +83,25 @@ function __setps1(){
 function newpcom(){
 	echo
 	pcom
-	tput cuf 2; echo -en " \033[m📂\033[01;37m: \033[m\033[38;5;11m$(dirs)\033[m$(__git_ps1) \r"
+	tput cuf 2; echo -en " \033[m📂\033[01;37m: \033[m\033[38;5;11m$(dirs)\033[m\033[38;5;15m$(__git_ps1 "\u@\h:\w" "\\\$") \r"
 #	echo -en $TIME
-	tput cuf $[$[$COLUMNS-$(echo " $(date) " | wc -L)]-2]; echo -en " $(date) \r"
+	tput cuf $[$[$COLUMNS-$(echo " $(date +%D) " | wc -L)]-2]; echo -en " $(date +%D) \r"
 	echo -en "\n"
-	__time1
+	__time2
+}
+
+function __time2(){
+    tput cuf "$TIMECUF"; echo -en "\033[38;5;15m"$(date +%-I)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%M)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%S)" \033[m"$(__check_AMPM)"\033[m $PS_THEME┛\033[m\r"
 }
 
 function __time1(){
 	TIMECUF=$[$COLUMNS-$(echo -en $(date +"%-I:%M:%S %p ┛") | wc -L)]
 	if [ `echo $(date +%p)` == 'PM' ]; then
-		tput cuf "$TIMECUF"; echo -en "$TIME_CLR"
-#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(__check_AMPM)\033[m $PS_THEME┛\033[m\r"
-#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;39m$(date +%p)\033[m\r"
+#		tput cuf "$TIMECUF"; echo -en "$TIME_CLR"
+		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m"$(date +%-I)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%M)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%S)" \033[m"$(__check_AMPM)"\033[m $PS_THEME┛\033[m\r"
 	else
-		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m$(__check_AMPM)\033[m $PS_THEME┛\033[m\r"
+#		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m"$(date +%-I)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%M)"\033[38;5;9m:\033[m\033[38;5;15m"$(date +%S)" \033[m"$(__check_AMPM)"\033[m $PS_THEME┛\033[m\r"
+		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m"$(date +"%-I")"\033[38;5;9m:\033[m\033[38;5;15m"$(date +"%M")"\033[38;5;9m:\033[m\033[38;5;15m"$(date +"%S")" \033[38;5;226m"$(__check_AMPM)"\033[m $PS_THEME┛\033[m\r"
 #		tput cuf "$TIMECUF"; echo -en "\033[38;5;15m$DATE_HOUR\033[38;5;9m:\033[m\033[38;5;15m$DATE_MIN\033[38;5;9m:\033[m\033[38;5;15m$DATE_SEC \033[38;5;226m$(date +%p)\033[m\r"
 #\033[m$PS_THEME┛\033[m"
 	fi

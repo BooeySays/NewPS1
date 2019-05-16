@@ -1,20 +1,6 @@
+#!/bin/bash
 
-  ┏━
-┏━┛USER
-┗		
+. ~/git-sh-prompt
+PROMPT_COMMAND='__git_ps1 "\n$(printf '[31m━%.s' $(seq 1 $COLUMNS))\r\033[1C\033[36m 🖿 \033[37m:\033[33m \w\033[m"  " \n\033[01;32m BOOEY\033[37m@\033[01;32m66MHz.ca\033[37m \\\$ "' 
 
-function __TIME_COLORED(){
-	if [ 
 
-tput cuf "$[$COLUMNS - $["$(date +%-I:%M:%S %p) ┛" | wc -L]]"; echo -en "$(date +%-I:%M:%S %p) ┛"
-
-┃
-┏
-┓
-┗
-┛
-┣
-┫
-┳
-┻
-╋if [ `echo $(date +%p)` != PM ]; then echo -en "\033[01;34m$(date +%p)\033[m"; else echo -en "\033[01;33m$(date +%p)\033[m"; fi

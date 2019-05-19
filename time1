@@ -1,6 +1,5 @@
-
-
-
+# The following function displays the current
+# time on the same line, aligned to the right
 
 function __time1(){
 	TIMECUF=$[$COLUMNS-$(echo -en $(date +"%-I:%M:%S %p ") | wc -L)]

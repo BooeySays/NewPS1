@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Function that checks the current time
+# to decide which to display -  a blue PM
+# or a yellow AM
+
+#function __check_AMPM(){
+	if [ `echo $(date +%p)` == 'PM' ]; then
+		echo -en "\033[m\033[38;5;39m"$(date +%p)"\033[m"
+	else
+		echo -en "\033[m\033[38;5;226m"$(date +%p)"\033[m"
+	fi
+#}
